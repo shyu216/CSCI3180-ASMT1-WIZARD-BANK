@@ -106,6 +106,7 @@
                        GO TO MAIN-PROCEDURE 
                        END-IF
                    CLOSE MASTER
+                   MOVE MBALANCE TO TBALANCE
                    GO TO READOPE
                    END-IF 
                END-IF
@@ -128,7 +129,7 @@
            DISPLAY "=> AMOUNT".
            ACCEPT AMOUNT.
            IF AMOUNT IS POSITIVE THEN 
-               DISPLAY "=> DEPOSIT ", AMOUNT, "TO", ACC2
+               DISPLAY "=> DEPOSIT ", AMOUNT, " TO ", ACC2
                IF ATM = 1 THEN 
                    MOVE ACC1 TO T1ACC
                    MOVE 'D' TO T1OPERATION
@@ -160,7 +161,7 @@
                DISPLAY "=> INSUFFICIENT BALANCE"
                GO TO OPEW
                END-IF.
-           DISPLAY "=> WITHDRAW ", AMOUNT, "TO", ACC1.
+           DISPLAY "=> WITHDRAW ", AMOUNT, " TO ", ACC1.
            IF ATM = 1 THEN 
                MOVE ACC1 TO T1ACC
                MOVE 'W' TO T1OPERATION
@@ -185,7 +186,6 @@
                DISPLAY "=> YOU CANNOT TRANSFER TO YOURSELF"
                GO TO OPET
                END-IF.
-           MOVE MBALANCE TO TBALANCE.
            OPEN INPUT MASTER.
            GO TO CMPACC2.
 
@@ -195,9 +195,9 @@
                CLOSE MASTER
                GO TO OPET
            NOT AT END IF MACC = ACC2 THEN 
-               CLOSE MASTER
-               GO TO OPET2 
-               END-IF
+                   CLOSE MASTER
+                   GO TO OPET2 
+                   END-IF
                GO TO CMPACC2
            END-READ.
        
@@ -212,7 +212,7 @@
                DISPLAY "=> INSUFFICIENT BALANCE"
                GO TO OPET2
                END-IF.
-           DISPLAY "=> WITHDRAW ", AMOUNT, "TO", ACC1.
+           DISPLAY "=> WITHDRAW ", AMOUNT, " TO ", ACC1.
            IF ATM = 1 THEN 
                MOVE ACC1 TO T1ACC
                MOVE 'W' TO T1OPERATION
@@ -228,7 +228,7 @@
                WRITE T3RECORD
                END-IF.
            ADD 1 TO STAMP.
-           DISPLAY "=> DEPOSIT ", AMOUNT, "TO", ACC2.
+           DISPLAY "=> DEPOSIT ", AMOUNT, " TO ", ACC2.
            IF ATM = 1 THEN 
                MOVE ACC2 TO T1ACC
                MOVE 'D' TO T1OPERATION
