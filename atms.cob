@@ -22,11 +22,12 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT MASTER ASSIGN TO 'master.txt'
+           SELECT MASTER ASSIGN TO 'maste.txt'
+               ORGANIZATION IS LINE SEQUENTIAL
+               FILE STATUS MS.
+           SELECT OPTIONAL TRANS711 ASSIGN TO 'trans711.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
-           SELECT TRANS711 ASSIGN TO 'trans711.txt'
-               ORGANIZATION IS LINE SEQUENTIAL.
-           SELECT TRANS713 ASSIGN TO 'trans713.txt'
+           SELECT OPTIONAL TRANS713 ASSIGN TO 'trans713.txt'
                ORGANIZATION IS LINE SEQUENTIAL.           
 
        DATA DIVISION.
@@ -63,6 +64,7 @@
        01 PSWD PIC 9(6).
        01 STAMP PIC 9(5) VALUE 0.
        01 TBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
+       77 MS                  PIC X(02) VALUE SPACES.
 
        PROCEDURE DIVISION.
        WELCOME.
@@ -71,7 +73,7 @@
            DISPLAY " #         WELCOME TO THE BANK         #".
            DISPLAY " #                                     #".
            DISPLAY "#########################################". 
-           
+           IF MS = "35" THEN GO TO FAREWELL END-IF. 
            OPEN OUTPUT TRANS711.
            OPEN OUTPUT TRANS713.
 

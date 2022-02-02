@@ -52,7 +52,7 @@
            02 MPSWD PIC 9(6).
            02 MBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
       *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=data-examples-numeric-internal-representation
-      
+
        FD TRANS711
            RECORD CONTAINS 29 CHARACTERS.
        01 T1RECORD.
@@ -107,4 +107,6 @@
            02 T3 PIC 9(10).
            02 NEGBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
               
-       WORKING-STORAGE SECTION.
+       PROCEDURE DIVISION.
+           SORT TRANS711 ON DESCENDING KEY STUDENT-ID-O
+           USING INPUT GIVING OUTPUT.
