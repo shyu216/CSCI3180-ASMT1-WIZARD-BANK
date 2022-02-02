@@ -27,7 +27,20 @@
            SELECT TRANS711 ASSIGN TO 'trans711.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT TRANS713 ASSIGN TO 'trans713.txt'
-               ORGANIZATION IS LINE SEQUENTIAL.           
+               ORGANIZATION IS LINE SEQUENTIAL.
+               
+           SELECT SORT711 ASSIGN TO 'transSorted711.txt'
+               ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT SORT713 ASSIGN TO 'transSorted713.txt'
+               ORGANIZATION IS LINE SEQUENTIAL. 
+           SELECT SORTED ASSIGN TO 'transSorted.txt'
+               ORGANIZATION IS LINE SEQUENTIAL.
+      *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=statements-sort-statement
+
+           SELECT UMASTER ASSIGN TO 'master.txt'
+               ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT NEGREP ASSIGN TO 'negReport.txt'
+               ORGANIZATION IS LINE SEQUENTIAL.         
 
        DATA DIVISION.
        FILE SECTION.
@@ -39,6 +52,7 @@
            02 MPSWD PIC 9(6).
            02 MBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
       *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=data-examples-numeric-internal-representation
+      
        FD TRANS711
            RECORD CONTAINS 29 CHARACTERS.
        01 T1RECORD.
@@ -53,4 +67,44 @@
               02 T3OPERATION PIC A(1).
               02 T3AMOUNT PIC 9(5)V9(2).
               02 T3TIME PIC 9(5).
+
+       FD SORT711
+           RECORD CONTAINS 29 CHARACTERS.
+       01 S1RECORD.
+              02 S1ACC PIC 9(16).
+              02 S1OPERATION PIC A(1).
+              02 S1AMOUNT PIC 9(5)V9(2).
+              02 S1TIME PIC 9(5).
+       FD SORT713
+           RECORD CONTAINS 29 CHARACTERS.
+       01 S3RECORD.
+              02 S3ACC PIC 9(16).
+              02 S3OPERATION PIC A(1).
+              02 S3AMOUNT PIC 9(5)V9(2).
+              02 S3TIME PIC 9(5).
+       FD SORTED
+           RECORD CONTAINS 29 CHARACTERS.
+       01 SRECORD.
+              02 SACC PIC 9(16).
+              02 SOPERATION PIC A(1).
+              02 SAMOUNT PIC 9(5)V9(2).
+              02 STIME PIC 9(5).   
+
+       FD UMASTER
+           RECORD CONTAINS 58 CHARACTERS.
+       01 UMRECORD.
+           02 UMNAME PIC A(20).
+           02 UMACC PIC 9(16).
+           02 UMPSWD PIC 9(6).
+           02 UMBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
+       FD NEGREP
+           RECORD CONTAINS 69 CHARACTERS.
+       01 NEGRECORD.
+           02 T1 PIC A(6).
+           02 NEGNAME PIC A(20).
+           02 T2 PIC A(17).
+           02 NEGACC PIC 9(16).
+           02 T3 PIC 9(10).
+           02 NEGBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
+              
        WORKING-STORAGE SECTION.
