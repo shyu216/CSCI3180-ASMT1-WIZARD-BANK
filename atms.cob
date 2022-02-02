@@ -128,7 +128,7 @@
            DISPLAY "=> AMOUNT".
            ACCEPT AMOUNT.
            IF AMOUNT IS POSITIVE THEN 
-               DISPLAY "=> DEPOSIT ", AMOUNT
+               DISPLAY "=> DEPOSIT ", AMOUNT, "TO", ACC2
                IF ATM = 1 THEN 
                    MOVE ACC1 TO T1ACC
                    MOVE 'D' TO T1OPERATION
@@ -160,7 +160,7 @@
                DISPLAY "=> INSUFFICIENT BALANCE"
                GO TO OPEW
                END-IF.
-           DISPLAY "=> WITHDRAW ", AMOUNT.
+           DISPLAY "=> WITHDRAW ", AMOUNT, "TO", ACC1.
            IF ATM = 1 THEN 
                MOVE ACC1 TO T1ACC
                MOVE 'W' TO T1OPERATION
@@ -212,7 +212,7 @@
                DISPLAY "=> INSUFFICIENT BALANCE"
                GO TO OPET2
                END-IF.
-           DISPLAY "=> WITHDRAW ", AMOUNT.
+           DISPLAY "=> WITHDRAW ", AMOUNT, "TO", ACC1.
            IF ATM = 1 THEN 
                MOVE ACC1 TO T1ACC
                MOVE 'W' TO T1OPERATION
@@ -228,7 +228,7 @@
                WRITE T3RECORD
                END-IF.
            ADD 1 TO STAMP.
-           DISPLAY "=> DEPOSIT ", AMOUNT.
+           DISPLAY "=> DEPOSIT ", AMOUNT, "TO", ACC2.
            IF ATM = 1 THEN 
                MOVE ACC2 TO T1ACC
                MOVE 'D' TO T1OPERATION
