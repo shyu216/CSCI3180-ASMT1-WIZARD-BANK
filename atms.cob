@@ -22,9 +22,10 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT MASTER ASSIGN TO 'maste.txt'
+           SELECT MASTER ASSIGN TO 'master.txt'
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS MS.
+      *https://stackoverflow.com/questions/61684092/cobol-file-not-found-while-opening-a-file
            SELECT OPTIONAL TRANS711 ASSIGN TO 'trans711.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT OPTIONAL TRANS713 ASSIGN TO 'trans713.txt'
@@ -64,7 +65,7 @@
        01 PSWD PIC 9(6).
        01 STAMP PIC 9(5) VALUE 0.
        01 TBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
-       77 MS                  PIC X(02) VALUE SPACES.
+       77 MS PIC X(02) VALUE SPACES.
 
        PROCEDURE DIVISION.
        WELCOME.
@@ -72,8 +73,7 @@
            DISPLAY " #                                     #".
            DISPLAY " #         WELCOME TO THE BANK         #".
            DISPLAY " #                                     #".
-           DISPLAY "#########################################". 
-           IF MS = "35" THEN GO TO FAREWELL END-IF. 
+           DISPLAY "#########################################".
            OPEN OUTPUT TRANS711.
            OPEN OUTPUT TRANS713.
 
@@ -93,6 +93,11 @@
            DISPLAY "=> PASSWORD".
            ACCEPT PSWD.
            OPEN INPUT MASTER.
+           IF MS NOT = "00" THEN 
+               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+                   , MS
+               GO TO FAREWELL END-IF. 
+      *https://ibmmainframes.com/references/a27.html
            GO TO CMPACC.
 
        CMPACC.
@@ -189,6 +194,10 @@
                GO TO OPET
                END-IF.
            OPEN INPUT MASTER.
+           IF MS NOT = "00" THEN 
+               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+                   , MS
+               GO TO FAREWELL END-IF. 
            GO TO CMPACC2.
 
        CMPACC2.
