@@ -137,6 +137,29 @@
        77 T3S PIC X(02) VALUE SPACES.
 
        PROCEDURE DIVISION.
+       CHECKFILE.
+           OPEN INPUT MASTER.
+           IF MS NOT = "00" THEN 
+               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+                   , MS
+               CLOSE MASTER
+               GO TO FAREWELL END-IF.
+           OPEN INPUT TRANS711.
+           IF T1S NOT = "00" THEN 
+               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+                   , T1S
+               CLOSE TRANS711
+               GO TO FAREWELL END-IF.
+           OPEN INPUT TRANS713.
+           IF T3S NOT = "00" THEN 
+               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+                   , T3S
+               CLOSE TRANS713
+               GO TO FAREWELL END-IF.
+           CLOSE TRANS711.
+           CLOSE TRANS713.
+           CLOSE MASTER.
+
        MAIN-PROCEDURE.
            DISPLAY "=> SORT TRANS711".
            SORT TEMP1 ON ASCENDING KEY TP1ACC
@@ -193,6 +216,7 @@
        DOUPDATE.
            
 
+       FAREWELL.
            STOP RUN.
 
        END PROGRAM central.
