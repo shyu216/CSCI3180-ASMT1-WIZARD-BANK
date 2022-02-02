@@ -1,4 +1,3 @@
-
       *     
       *CSCI3180 Principles of Programming Languages
       *     
@@ -38,7 +37,7 @@
            02 MNAME PIC A(20).
            02 MACC PIC 9(16).
            02 MPSWD PIC 9(6).
-           02 MBALANCE PIC S9(13)V9(2) SIGN leading SEPARATE.
+           02 MBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
       *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=data-examples-numeric-internal-representation
        FD TRANS711
            RECORD CONTAINS 29 CHARACTERS.
@@ -63,6 +62,7 @@
        01 AMOUNT PIC 9(5)V9(2).
        01 PSWD PIC 9(6).
        01 STAMP PIC 9(5) VALUE 0.
+       01 TBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
 
        PROCEDURE DIVISION.
        WELCOME.
@@ -102,6 +102,7 @@
                IF PSWD = MPSWD THEN 
                    IF MBALANCE IS NEGATIVE THEN
                        DISPLAY "=> NEGATIVE REMAINS TRANSACTION ABORT"
+                       CLOSE MASTER
                        GO TO MAIN-PROCEDURE 
                        END-IF
                    CLOSE MASTER
@@ -148,11 +149,102 @@
            DISPLAY "=> INVALID INPUT".
            GO TO OPED.
                    
-                   
-
        OPEW.
+           DISPLAY "=> AMOUNT".
+           ACCEPT AMOUNT.
+           IF AMOUNT IS NEGATIVE THEN
+               DISPLAY "=> INVALID INPUT"
+               GO TO OPEW
+               END-IF.
+           IF AMOUNT > MBALANCE THEN
+               DISPLAY "=> INSUFFICIENT BALANCE"
+               GO TO OPEW
+               END-IF.
+           DISPLAY "=> WITHDRAW ", AMOUNT.
+           IF ATM = 1 THEN 
+               MOVE ACC1 TO T1ACC
+               MOVE 'W' TO T1OPERATION
+               MOVE AMOUNT TO T1AMOUNT
+               MOVE STAMP TO T1TIME
+               WRITE T1RECORD
+               END-IF.
+           IF ATM = 2 THEN
+               MOVE ACC1 TO T3ACC
+               MOVE 'W' TO T3OPERATION
+               MOVE AMOUNT TO T3AMOUNT
+               MOVE STAMP TO T3TIME
+               WRITE T3RECORD
+               END-IF.
+           ADD 1 TO STAMP.
+           GO TO CONTI. 
 
        OPET.
+           DISPLAY "=> TARGET ACCOUNT".
+           ACCEPT ACC2.
+           IF ACC2 = ACC1 THEN 
+               DISPLAY "=> YOU CANNOT TRANSFER TO YOURSELF"
+               GO TO OPET
+               END-IF.
+           MOVE MBALANCE TO TBALANCE.
+           OPEN INPUT MASTER.
+           GO TO CMPACC2.
+
+       CMPACC2.
+           READ MASTER
+           AT END DISPLAY "=> TARGET ACCOUNT DOES NOT EXIST"
+               CLOSE MASTER
+               GO TO OPET
+           NOT AT END IF MACC = ACC2 THEN 
+               CLOSE MASTER
+               GO TO OPET2 
+               END-IF
+               GO TO CMPACC2
+           END-READ.
+       
+       OPET2.
+           DISPLAY "=> AMOUNT".
+           ACCEPT AMOUNT.
+           IF AMOUNT IS NEGATIVE THEN
+               DISPLAY "=> INVALID INPUT"
+               GO TO OPET2
+               END-IF.
+           IF AMOUNT > TBALANCE THEN
+               DISPLAY "=> INSUFFICIENT BALANCE"
+               GO TO OPET2
+               END-IF.
+           DISPLAY "=> WITHDRAW ", AMOUNT.
+           IF ATM = 1 THEN 
+               MOVE ACC1 TO T1ACC
+               MOVE 'W' TO T1OPERATION
+               MOVE AMOUNT TO T1AMOUNT
+               MOVE STAMP TO T1TIME
+               WRITE T1RECORD
+               END-IF.
+           IF ATM = 2 THEN
+               MOVE ACC1 TO T3ACC
+               MOVE 'W' TO T3OPERATION
+               MOVE AMOUNT TO T3AMOUNT
+               MOVE STAMP TO T3TIME
+               WRITE T3RECORD
+               END-IF.
+           ADD 1 TO STAMP.
+           DISPLAY "=> DEPOSIT ", AMOUNT.
+           IF ATM = 1 THEN 
+               MOVE ACC2 TO T1ACC
+               MOVE 'D' TO T1OPERATION
+               MOVE AMOUNT TO T1AMOUNT
+               MOVE STAMP TO T1TIME
+               WRITE T1RECORD
+               END-IF.
+           IF ATM = 2 THEN
+               MOVE ACC2 TO T3ACC
+               MOVE 'D' TO T3OPERATION
+               MOVE AMOUNT TO T3AMOUNT
+               MOVE STAMP TO T3TIME
+               WRITE T3RECORD
+               END-IF.
+           ADD 1 TO STAMP.
+           GO TO CONTI. 
 
        CONTI.
            DISPLAY "=> CONTINUE?".
@@ -161,7 +253,8 @@
            ACCEPT OPE2.
            IF OPE2 = 'Y' THEN GO TO MAIN-PROCEDURE END-IF.
            IF OPE2 = 'N' THEN GO TO FAREWELL END-IF.
-           
+           DISPLAY "=> INVALID INPUT".
+           GO TO CONTI.
 
        FAREWELL.
            DISPLAY "#########################################".
