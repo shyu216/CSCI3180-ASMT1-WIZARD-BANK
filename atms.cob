@@ -61,7 +61,7 @@
        01 OPE2 PIC A.
        01 ACC1 PIC 9(16).
        01 ACC2 PIC 9(16).
-       01 AMOUNT PIC 9(5)V9(2).
+       01 AMOUNT PIC S9(5)V9(2).
        01 PSWD PIC 9(6).
        01 STAMP PIC 9(5) VALUE 0.
        01 TBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
@@ -268,12 +268,8 @@
            GO TO CONTI.
 
        FAREWELL.
-           DISPLAY "#########################################".
-           DISPLAY " #                                     #".
-           DISPLAY " #           HAVE A NICE DAY           #".
-           DISPLAY " #                                     #".
-           DISPLAY "#########################################". 
-           
+           DISPLAY "=> BYEBYE".
+
            CLOSE TRANS711.
            CLOSE TRANS713.
            STOP RUN. 

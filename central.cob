@@ -51,7 +51,6 @@
                ORGANIZATION IS LINE SEQUENTIAL.
       *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=statements-open-statement
                     
-
        DATA DIVISION.
        FILE SECTION.
        FD MASTER
@@ -144,21 +143,21 @@
                    , MS
                CLOSE MASTER
                GO TO FAREWELL END-IF.
+           CLOSE MASTER.
            OPEN INPUT TRANS711.
            IF T1S NOT = "00" THEN 
-               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+               DISPLAY "=> ERROR IN OPENING TRANS711 FILE WITH STATUS "
                    , T1S
                CLOSE TRANS711
                GO TO FAREWELL END-IF.
+           CLOSE TRANS711.
            OPEN INPUT TRANS713.
            IF T3S NOT = "00" THEN 
-               DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
+               DISPLAY "=> ERROR IN OPENING TRANS713 FILE WITH STATUS "
                    , T3S
                CLOSE TRANS713
                GO TO FAREWELL END-IF.
-           CLOSE TRANS711.
            CLOSE TRANS713.
-           CLOSE MASTER.
 
        MAIN-PROCEDURE.
            DISPLAY "=> SORT TRANS711".
@@ -261,7 +260,8 @@
            END-READ.
                    
        FAREWELL.
-           DISPLAY "=> ALL DONE PLEASE CHECK".
+           DISPLAY "=> ALL DONE SUCCESSFULLY".
            STOP RUN.
 
        END PROGRAM central.
+       
