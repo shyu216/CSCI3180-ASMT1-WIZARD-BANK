@@ -107,13 +107,13 @@
            02 UMPSWD PIC 9(6).
            02 UMBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
        FD NEGREP
-           RECORD CONTAINS 69 CHARACTERS.
+           RECORD CONTAINS 96 CHARACTERS.
        01 NEGRECORD.
            02 T1 PIC A(6).
            02 NEGNAME PIC A(20).
            02 T2 PIC A(17).
            02 NEGACC PIC 9(16).
-           02 T3 PIC 9(10).
+           02 T3 PIC A(10).
            02 NEGBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
               
        SD TEMP1
@@ -213,10 +213,55 @@
            USING TEMP2 GIVING SORTED.
            DISPLAY "=> DONE".
 
-       DOUPDATE.
-           
+           DISPLAY "=> UPDATE".
+           OPEN INPUT MASTER.
+           OPEN OUTPUT UMASTER.
+           OPEN OUTPUT NEGREP.
 
+       DOUPDATE.
+           READ MASTER
+           NOT AT END 
+               MOVE MACC TO UMACC
+               MOVE MNAME TO UMNAME
+               MOVE MPSWD TO UMPSWD
+               MOVE MBALANCE TO UMBALANCE
+               OPEN INPUT SORTED
+               GO TO READUPDATE
+           AT END 
+               CLOSE MASTER
+               CLOSE UMASTER
+               CLOSE NEGREP
+               DISPLAY "=> DONE"
+               GO TO FAREWELL
+           END-READ.
+
+       READUPDATE.
+           READ SORTED
+           NOT AT END IF SACC = MACC THEN 
+                  IF SOPERATION = 'W' THEN 
+                      SUBTRACT SAMOUNT FROM UMBALANCE
+                      END-IF
+                  IF SOPERATION = 'D' THEN
+                      ADD SAMOUNT TO UMBALANCE
+                      END-IF
+                  END-IF 
+               GO TO READUPDATE
+           AT END CLOSE SORTED
+               WRITE UMRECORD
+               IF UMBALANCE IS NEGATIVE THEN 
+                   MOVE "Name: " TO T1
+                   MOVE " Account Number: " TO T2
+                   MOVE " Balance: " TO T3
+                   MOVE UMNAME TO NEGNAME
+                   MOVE UMACC TO NEGACC
+                   MOVE UMBALANCE TO NEGBALANCE
+                   WRITE NEGRECORD
+                   END-IF
+               GO TO DOUPDATE
+           END-READ.
+                   
        FAREWELL.
+           DISPLAY "=> ALL DONE PLEASE CHECK".
            STOP RUN.
 
        END PROGRAM central.
