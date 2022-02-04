@@ -21,7 +21,9 @@
        AUTHOR. YU SIHONG.
        
        ENVIRONMENT DIVISION.
+
        INPUT-OUTPUT SECTION.
+
        FILE-CONTROL.
            SELECT MASTER ASSIGN TO 'master.txt'
                ORGANIZATION IS LINE SEQUENTIAL
@@ -52,7 +54,9 @@
                ORGANIZATION IS LINE SEQUENTIAL.
                     
        DATA DIVISION.
+
        FILE SECTION.
+       
        FD MASTER.
        01 MRECORD.
            02 MNAME PIC A(20).
@@ -66,6 +70,7 @@
               02 T1OPERATION PIC A(1).
               02 T1AMOUNT PIC 9(5)V9(2).
               02 T1TIME PIC 9(5).
+
        FD TRANS713.
        01 T3RECORD.
               02 T3ACC PIC 9(16).
@@ -79,12 +84,14 @@
               02 S1OPERATION PIC A(1).
               02 S1AMOUNT PIC 9(5)V9(2).
               02 S1TIME PIC 9(5).
+
        FD SORT713.
        01 S3RECORD.
               02 S3ACC PIC 9(16).
               02 S3OPERATION PIC A(1).
               02 S3AMOUNT PIC 9(5)V9(2).
               02 S3TIME PIC 9(5).
+
        FD SORTED.
        01 SRECORD.
               02 SACC PIC 9(16).
@@ -98,6 +105,7 @@
            02 UMACC PIC 9(16).
            02 UMPSWD PIC 9(6).
            02 UMBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
+
        FD NEGREP.
        01 NEGRECORD.
            02 T1 PIC A(4)XX.
@@ -113,6 +121,7 @@
               02 TP1OPERATION PIC A(1).
               02 TP1AMOUNT PIC 9(5)V9(2).
               02 TP1TIME PIC 9(5).
+
        FD TEMP2.
        01 TP2RECORD.
               02 TP2ACC PIC 9(16).
@@ -126,6 +135,7 @@
        77 T3S PIC X(02) VALUE SPACES.
 
        PROCEDURE DIVISION.
+       
       *CHECK INPUT FILE EXISTENCE FIRST
        CHECKFILE.
            OPEN INPUT MASTER.

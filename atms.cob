@@ -22,7 +22,9 @@
        AUTHOR. YU SIHONG.
 
        ENVIRONMENT DIVISION.
+
        INPUT-OUTPUT SECTION.
+
        FILE-CONTROL.
            SELECT MASTER ASSIGN TO 'master.txt'
                ORGANIZATION IS LINE SEQUENTIAL
@@ -33,7 +35,9 @@
                ORGANIZATION IS LINE SEQUENTIAL.           
 
        DATA DIVISION.
+
        FILE SECTION.
+
        FD MASTER.
        01 MRECORD.
            02 MNAME PIC A(20).
@@ -48,12 +52,14 @@
               02 T1OPERATION PIC A(1).
               02 T1AMOUNT PIC 9(5)V9(2).
               02 T1TIME PIC 9(5).
+
        FD TRANS713.
        01 T3RECORD.
               02 T3ACC PIC 9(16).
               02 T3OPERATION PIC A(1).
               02 T3AMOUNT PIC 9(5)V9(2).
               02 T3TIME PIC 9(5).
+
        WORKING-STORAGE SECTION.
        01 ATM PIC 9.
        01 OPE PIC A.
@@ -67,6 +73,7 @@
        77 MS PIC X(02) VALUE SPACES.
 
        PROCEDURE DIVISION.
+       
        WELCOME.
            DISPLAY "#########################################".
            DISPLAY " #                                     #".
