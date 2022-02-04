@@ -33,6 +33,18 @@ char mrecord[60] = {0},
      mbalance[18] = {0};
 int stamp = 0;
 
+// clean stdin to avoid error
+void cleanStdin()
+{
+    char c = '0';
+    do
+    {
+        c = getchar();
+        // printf("int%d char%c\n", c, c);
+    } while (c != '\n' && c != 0);
+    return;
+}
+
 // who: 1 for acc1, 2 for acc2
 int checkAcc(char *acc, char *pswd, int who)
 {
@@ -124,6 +136,7 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
     strncat(record, opt, 1);
     strncat(record, amou, 7);
     strncat(record, time, 5);
+    printf("=> GENERATE RECORD: ");
     puts(record);
     // printf("%c\n", *atm);
     if (*atm == '1')
@@ -147,12 +160,7 @@ double deposit()
     {
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
-        char c = '0';
-        do
-        {
-            c = getchar();
-            printf("c%d %c\n", c, c);
-        } while (c != '\n' && c != 0);
+        cleanStdin();
         if (amount > 0.0)
         {
             return amount;
@@ -168,12 +176,7 @@ double withdrawal(char *balance)
     {
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
-        char c = '0';
-        do
-        {
-            c = getchar();
-            printf("c%d %c\n", c, c);
-        } while (c != '\n' && c != 0);
+        cleanStdin();
         if (amount < 0.0)
         {
             printf("=> INVALID INPUT\n");
@@ -200,12 +203,7 @@ int service()
         // read integer or skip other
         scanf("%c", &atm);
         // read skipped and newline
-        char c = '0';
-        do
-        {
-            c = getchar();
-            printf("c%d %c\n", c, c);
-        } while (c != '\n' && c != 0);
+        cleanStdin();
         if (atm == '1' || atm == '2')
         {
             break;
@@ -219,20 +217,10 @@ int service()
     {
         printf("=> ACCOUNT\n");
         scanf("%16s", acc1);
-        char c = '0';
-        do
-        {
-            c = getchar();
-            printf("c%d %c\n", c, c);
-        } while (c != '\n' && c != 0);
+        cleanStdin();
         printf("=> PASSWORD\n");
         scanf("%6s", pswd);
-        c = '0';
-        do
-        {
-            c = getchar();
-            printf("c%d %c\n", c, c);
-        } while (c != '\n' && c != 0);
+        cleanStdin();
         int check = checkAcc(acc1, pswd, 1);
         if (check == 0)
         {
@@ -254,12 +242,7 @@ int service()
     {
         printf("=> PLEASE CHOOSE YOUR SERVICE\n=> PRESS D FOR DEPOSIT\n=> PRESS W FOR WITHDRWAL\n=> PRESS T FOR TRANSFER\n");
         scanf("%c", &opt);
-        char c = '0';
-        do
-        {
-            c = getchar();
-            printf("c%d %c\n", c, c);
-        } while (c != '\n' && c != 0);
+        cleanStdin();
         if (opt == 'W' || opt == 'D' || opt == 'T')
         {
             break;
@@ -291,12 +274,7 @@ int service()
         {
             printf("=> ACCOUNT\n");
             scanf("%16s", acc2);
-            char c = '0';
-            do
-            {
-                c = getchar();
-                printf("c%d %c\n", c, c);
-            } while (c != '\n' && c != 0);
+            cleanStdin();
             if (strcmp(acc1, acc2) == 0)
             {
                 printf("=> YOU CANNOT TRANSFER TO YOURSELF\n");
@@ -308,7 +286,6 @@ int service()
                 break;
             }
         }
-
         char *balance = mbalance;
         double amount = withdrawal(balance);
         opt = 'W';
@@ -343,12 +320,7 @@ int main()
         {
             printf("=> CONTINUE?\n=> Y FOR YES\n=> N FOR NO\n");
             scanf("%c", &conti);
-            char c = '0';
-            do
-            {
-                c = getchar();
-                printf("c%d %c\n", c, c);
-            } while (c != '\n' && c != 0);
+            cleanStdin();
         } while (conti != 'Y' && conti != 'N');
     } while (conti != 'N');
 

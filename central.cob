@@ -3,11 +3,12 @@
       *     
       *--- Declaration ---
       *     
-      *I declare that the assignment here submitted is original except for source
-      *material explicitly acknowledged. I also acknowledge that I am aware of
-      *University policy and regulations on honesty in academic work, and of the
-      *disciplinary guidelines and procedures applicable to breaches of such policy
-      *and regulations, as contained in the website
+      *I declare that the assignment here submitted is original except f
+      *or sourcematerial explicitly acknowledged. I also acknowledge tha
+      *t I am aware ofUniversity policy and regulations on honesty in ac
+      *ademic work, and of thedisciplinary guidelines and procedures app
+      *licable to breaches of such policyand regulations, as contained i
+      *n the website
       *    http://www.cuhk.edu.hk/policy/academichonesty/
       *   
       *Assignment 1
@@ -32,98 +33,87 @@
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS T3S.
                
+      *OPTIONAL: CREATE IF NOT EXIST
            SELECT OPTIONAL SORT711 ASSIGN TO 'transSorted711.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT OPTIONAL SORT713 ASSIGN TO 'transSorted713.txt'
                ORGANIZATION IS LINE SEQUENTIAL. 
            SELECT OPTIONAL SORTED ASSIGN TO 'transSorted.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
-      *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=statements-sort-statement
-
+  
            SELECT OPTIONAL UMASTER ASSIGN TO 'updatedMaster.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT OPTIONAL NEGREP ASSIGN TO 'negReport.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
 
-           SELECT OPTIONAL TEMP1 ASSIGN TO 'temp1.txt'
+           SELECT OPTIONAL TEMP1 ASSIGN TO 'work.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
-           SELECT OPTIONAL TEMP2 ASSIGN TO 'temp2.txt'
+           SELECT OPTIONAL TEMP2 ASSIGN TO 'transUnsort.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
-      *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=statements-open-statement
                     
        DATA DIVISION.
        FILE SECTION.
-       FD MASTER
-           RECORD CONTAINS 58 CHARACTERS.
+       FD MASTER.
        01 MRECORD.
            02 MNAME PIC A(20).
            02 MACC PIC 9(16).
            02 MPSWD PIC 9(6).
            02 MBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
       
-       FD TRANS711
-           RECORD CONTAINS 29 CHARACTERS.
+       FD TRANS711.
        01 T1RECORD.
               02 T1ACC PIC 9(16).
               02 T1OPERATION PIC A(1).
               02 T1AMOUNT PIC 9(5)V9(2).
               02 T1TIME PIC 9(5).
-       FD TRANS713
-           RECORD CONTAINS 29 CHARACTERS.
+       FD TRANS713.
        01 T3RECORD.
               02 T3ACC PIC 9(16).
               02 T3OPERATION PIC A(1).
               02 T3AMOUNT PIC 9(5)V9(2).
               02 T3TIME PIC 9(5).
 
-       FD SORT711
-           RECORD CONTAINS 29 CHARACTERS.
+       FD SORT711.
        01 S1RECORD.
               02 S1ACC PIC 9(16).
               02 S1OPERATION PIC A(1).
               02 S1AMOUNT PIC 9(5)V9(2).
               02 S1TIME PIC 9(5).
-       FD SORT713
-           RECORD CONTAINS 29 CHARACTERS.
+       FD SORT713.
        01 S3RECORD.
               02 S3ACC PIC 9(16).
               02 S3OPERATION PIC A(1).
               02 S3AMOUNT PIC 9(5)V9(2).
               02 S3TIME PIC 9(5).
-       FD SORTED
-           RECORD CONTAINS 29 CHARACTERS.
+       FD SORTED.
        01 SRECORD.
               02 SACC PIC 9(16).
               02 SOPERATION PIC A(1).
               02 SAMOUNT PIC 9(5)V9(2).
               02 STIME PIC 9(5).   
 
-       FD UMASTER
-           RECORD CONTAINS 58 CHARACTERS.
+       FD UMASTER.
        01 UMRECORD.
            02 UMNAME PIC A(20).
            02 UMACC PIC 9(16).
            02 UMPSWD PIC 9(6).
            02 UMBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
-       FD NEGREP
-           RECORD CONTAINS 96 CHARACTERS.
+       FD NEGREP.
        01 NEGRECORD.
-           02 T1 PIC A(6).
+           02 T1 PIC A(4)XX.
            02 NEGNAME PIC A(20).
-           02 T2 PIC A(17).
+           02 T2 PIC A(15)XX.
            02 NEGACC PIC 9(16).
-           02 T3 PIC A(10).
+           02 T3 PIC A(8)XX.
            02 NEGBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
               
-       SD TEMP1
-           RECORD CONTAINS 29 CHARACTERS.
+       SD TEMP1.
        01 TP1RECORD.
               02 TP1ACC PIC 9(16).
               02 TP1OPERATION PIC A(1).
               02 TP1AMOUNT PIC 9(5)V9(2).
               02 TP1TIME PIC 9(5).
-       FD TEMP2
-           RECORD CONTAINS 29 CHARACTERS.
+       FD TEMP2.
        01 TP2RECORD.
               02 TP2ACC PIC 9(16).
               02 TP2OPERATION PIC A(1).
@@ -136,6 +126,7 @@
        77 T3S PIC X(02) VALUE SPACES.
 
        PROCEDURE DIVISION.
+      *CHECK INPUT FILE EXISTENCE FIRST
        CHECKFILE.
            OPEN INPUT MASTER.
            IF MS NOT = "00" THEN 
@@ -160,19 +151,22 @@
            CLOSE TRANS713.
 
        MAIN-PROCEDURE.
+      *SORT 711
            DISPLAY "=> SORT TRANS711".
            SORT TEMP1 ON ASCENDING KEY TP1ACC
                ON ASCENDING KEY TP1TIME
            USING TRANS711 GIVING SORT711.
            DISPLAY "=> DONE".
 
+      *SORT 713
            DISPLAY "=> SORT TRANS713".
            SORT TEMP1 ON ASCENDING KEY TP1ACC
                ON ASCENDING KEY TP1TIME
            USING TRANS713 GIVING SORT713.
            DISPLAY "=> DONE".
 
-           DISPLAY "=> MERGE"
+      *SORT BOTH
+           DISPLAY "=> WRITE INTO ONE"
            OPEN OUTPUT TEMP2.
            OPEN INPUT TRANS711.
 
@@ -203,15 +197,16 @@
            AT END 
                CLOSE TRANS713
                CLOSE TEMP2
-               GO TO DOMERGE
+               GO TO SORTATM
            END-READ.
 
-       DOMERGE.
+       SORTATM.
            SORT TEMP1 ON ASCENDING KEY TP1ACC
                ON ASCENDING KEY TP1TIME
            USING TEMP2 GIVING SORTED.
            DISPLAY "=> DONE".
 
+      *UPDATE MASTER AWA REPORT NEGACC
            DISPLAY "=> UPDATE".
            OPEN INPUT MASTER.
            OPEN OUTPUT UMASTER.
@@ -258,7 +253,8 @@
                    END-IF
                GO TO DOUPDATE
            END-READ.
-                   
+
+      *SAY BYEBYE      
        FAREWELL.
            DISPLAY "=> ALL DONE SUCCESSFULLY".
            STOP RUN.

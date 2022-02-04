@@ -3,18 +3,20 @@
       *     
       *--- Declaration ---
       *     
-      *I declare that the assignment here submitted is original except for source
-      *material explicitly acknowledged. I also acknowledge that I am aware of
-      *University policy and regulations on honesty in academic work, and of the
-      *disciplinary guidelines and procedures applicable to breaches of such policy
-      *and regulations, as contained in the website
+      *I declare that the assignment here submitted is original except f
+      *or sourcematerial explicitly acknowledged. I also acknowledge tha
+      *t I am aware ofUniversity policy and regulations on honesty in ac
+      *ademic work, and of thedisciplinary guidelines and procedures app
+      *licable to breaches of such policyand regulations, as contained i
+      *n the website
       *    http://www.cuhk.edu.hk/policy/academichonesty/
       *   
       *Assignment 1
       *Name : YU Si Hong
       *Student ID : 1155141630
       *Email Addr : 1155141630@link.cuhk.edu.hk
-      *     
+      *       
+
        IDENTIFICATION DIVISION.
        PROGRAM-ID. atms.
        AUTHOR. YU SIHONG.
@@ -25,7 +27,6 @@
            SELECT MASTER ASSIGN TO 'master.txt'
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS MS.
-      *https://stackoverflow.com/questions/61684092/cobol-file-not-found-while-opening-a-file
            SELECT OPTIONAL TRANS711 ASSIGN TO 'trans711.txt'
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT OPTIONAL TRANS713 ASSIGN TO 'trans713.txt'
@@ -33,23 +34,21 @@
 
        DATA DIVISION.
        FILE SECTION.
-       FD MASTER
-           RECORD CONTAINS 58 CHARACTERS.
+       FD MASTER.
        01 MRECORD.
            02 MNAME PIC A(20).
            02 MACC PIC 9(16).
            02 MPSWD PIC 9(6).
            02 MBALANCE PIC S9(13)V9(2) SIGN LEADING SEPARATE.
-      *https://www.ibm.com/docs/en/cobol-zos/4.2?topic=data-examples-numeric-internal-representation
-       FD TRANS711
-           RECORD CONTAINS 29 CHARACTERS.
+      *READ NUMBER WITH SIGN
+
+       FD TRANS711.
        01 T1RECORD.
               02 T1ACC PIC 9(16).
               02 T1OPERATION PIC A(1).
               02 T1AMOUNT PIC 9(5)V9(2).
               02 T1TIME PIC 9(5).
-       FD TRANS713
-           RECORD CONTAINS 29 CHARACTERS.
+       FD TRANS713.
        01 T3RECORD.
               02 T3ACC PIC 9(16).
               02 T3OPERATION PIC A(1).
@@ -77,6 +76,7 @@
            OPEN OUTPUT TRANS711.
            OPEN OUTPUT TRANS713.
 
+      *CHOOSE ATM FIRST
        MAIN-PROCEDURE.
            DISPLAY "=> PLEASE CHOOSE THE ATM".
            DISPLAY "=> PRESS 1 FOR ATM 711".
@@ -87,6 +87,7 @@
            DISPLAY "=> INVALID INPUT".
            GO TO MAIN-PROCEDURE.
 
+      *GET ACC
        READACC.
            DISPLAY "=> ACCOUNT".
            ACCEPT ACC1.
@@ -97,9 +98,11 @@
                DISPLAY "=> ERROR IN OPENING MASTER FILE WITH STATUS "
                    , MS
                GO TO FAREWELL END-IF. 
-      *https://ibmmainframes.com/references/a27.html
+      *FILE STATUS: 00 SUCCESSFUL, 35 FILE NOT FOUND
+      
            GO TO CMPACC.
 
+      *CHECK ACC WITH VALID PSWD & BALANCE
        CMPACC.
            READ MASTER
            AT END DISPLAY "=> INCORRECT ACCOUNT/PASSWORD"
@@ -120,6 +123,7 @@
                GO TO CMPACC
            END-READ.
 
+      *CHOOSE SERVICE OPTION
        READOPE.
            DISPLAY "=> PLEASE CHOOSE YOUR SERVICE".
            DISPLAY "=> PRESS D FOR DEPOSIT".
@@ -132,6 +136,7 @@
            DISPLAY "=> INVALID INPUT".
            GO TO READOPE.
 
+      *DEPOSIT
        OPED.
            DISPLAY "=> AMOUNT".
            ACCEPT AMOUNT.
@@ -156,7 +161,8 @@
                END-IF.
            DISPLAY "=> INVALID INPUT".
            GO TO OPED.
-                   
+
+      *WITHDRAWAL    
        OPEW.
            DISPLAY "=> AMOUNT".
            ACCEPT AMOUNT.
@@ -186,6 +192,7 @@
            ADD 1 TO STAMP.
            GO TO CONTI. 
 
+      *TRANSFER
        OPET.
            DISPLAY "=> TARGET ACCOUNT".
            ACCEPT ACC2.
@@ -200,6 +207,7 @@
                GO TO FAREWELL END-IF. 
            GO TO CMPACC2.
 
+      *GET THE RECEIVER ACC
        CMPACC2.
            READ MASTER
            AT END DISPLAY "=> TARGET ACCOUNT DOES NOT EXIST"
@@ -212,6 +220,7 @@
                GO TO CMPACC2
            END-READ.
        
+      *CONTINUE TO TRANSFER
        OPET2.
            DISPLAY "=> AMOUNT".
            ACCEPT AMOUNT.
@@ -257,6 +266,7 @@
            ADD 1 TO STAMP.
            GO TO CONTI. 
 
+      *CHECK CONTINUE
        CONTI.
            DISPLAY "=> CONTINUE?".
            DISPLAY "=> Y FOR YES".
@@ -267,6 +277,7 @@
            DISPLAY "=> INVALID INPUT".
            GO TO CONTI.
 
+      *SAY BYEBYE
        FAREWELL.
            DISPLAY "=> BYEBYE".
 
