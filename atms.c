@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include<math.h>
+#include <math.h>
 
 FILE *t1 = NULL,
      *t2 = NULL,
@@ -33,6 +33,7 @@ char mrecord[60] = {0},
      mbalance[18] = {0};
 int stamp = 0;
 
+// who: 1 for acc1, 2 for acc2
 int checkAcc(char *acc, char *pswd, int who)
 {
     mtr = fopen(fmtr, "r");
@@ -69,7 +70,7 @@ int checkAcc(char *acc, char *pswd, int who)
         // printf("%s\n%s\n%s\n%s\n", mname, macc, mpswd, mbalance);
         if (who == 1)
         {
-            if (strncmp(macc, acc,16) == 0 && 0 == strncmp(mpswd, pswd,6))
+            if (strncmp(macc, acc, 16) == 0 && 0 == strncmp(mpswd, pswd, 6))
             {
                 fclose(mtr);
                 if (mbalance[0] == '-')
@@ -82,8 +83,9 @@ int checkAcc(char *acc, char *pswd, int who)
         }
         if (who == 2)
         {
-            if (strncmp(macc, acc,16) == 0)
+            if (strncmp(macc, acc, 16) == 0)
             {
+                fclose(mtr);
                 return 0;
             }
         }
@@ -145,7 +147,7 @@ double deposit()
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
         getchar();
-        if ((int)amount > 0)
+        if (amount > 0.0)
         {
             return amount;
         }
@@ -161,12 +163,12 @@ double withdrawal(char *balance)
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
         getchar();
-        if (amount < 0)
+        if (amount < 0.0)
         {
             printf("=> INVALID INPUT\n");
             continue;
         }
-        if (amount > atoi(balance))
+        if (amount > 0.0 + atoi(balance))
         {
             printf("=> INSUFFICIENT BALANCE\n");
             continue;
@@ -248,6 +250,34 @@ int service()
         char *balance = mbalance;
         double amount = withdrawal(balance);
         writeAtm(acc1, &atm, &opt, &amount);
+    }
+
+    // (4c) transfer
+    if (opt == 'T')
+    {
+        while (1)
+        {
+            printf("=> ACCOUNT\n");
+            scanf("%16s", acc2);
+            getchar();
+            if (strcmp(acc1, acc2) == 0)
+            {
+                printf("=> YOU CANNOT TRANSFER TO YOURSELF\n");
+                continue;
+            }
+            int check = checkAcc(acc2, NULL, 2);
+            if (check == 0)
+            {
+                break;
+            }
+        }
+        
+        char *balance = mbalance;
+        double amount = withdrawal(balance);
+        opt = 'W';
+        writeAtm(acc1, &atm, &opt, &amount);
+        opt='D';
+        writeAtm(acc2, &atm, &opt, &amount);
     }
 
     return 0;
