@@ -128,12 +128,12 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
     if (*atm == '1')
     {
         fputs(record, t1);
-        fprintf(t1, "\r\n");
+        fprintf(t1, "\n");
     }
     if (*atm == '2')
     {
         fputs(record, t2);
-        fprintf(t2, "\r\n");
+        fprintf(t2, "\n");
     }
     stamp++;
     return;
