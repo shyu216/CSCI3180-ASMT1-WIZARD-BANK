@@ -96,35 +96,36 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
 {
     // (a) get timestamp string
     char time[6] = {'0'};
+    int tim = stamp;
     int j = 0;
     for (int i = 4; i >= 0; i--)
     {
-        j = stamp % 10;
+        j = tim % 10;
         // printf("%d\n", j);
         j += 48;
         time[i] = time[i] > j ? time[i] : j;
-        stamp /= 10;
+        tim /= 10;
     }
     // (b) get amount string
-    char amo[8] = {'0'};
-    int amou = lround(100 * (*amount));
+    char amou[8] = {'0'};
+    int amo = lround(100 * (*amount));
     int k = 0;
     for (int i = 6; i >= 0; i--)
     {
-        k = amou % 10;
+        k = amo % 10;
         // printf("%d\n", k);
         k += 48;
-        amo[i] = amo[i] > k ? amo[i] : k;
-        amou /= 10;
+        amou[i] = amou[i] > k ? amou[i] : k;
+        amo /= 10;
     }
     // (c) write to ATM
     char record[29] = {0};
     strncat(record, acc, 16);
     strncat(record, opt, 1);
-    strncat(record, amo, 7);
+    strncat(record, amou, 7);
     strncat(record, time, 5);
     puts(record);
-    printf("%c\n", *atm);
+    // printf("%c\n", *atm);
     if (*atm == '1')
     {
         fputs(record, t1);
@@ -146,7 +147,12 @@ double deposit()
     {
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
-        getchar();
+        char c = '0';
+        do
+        {
+            c = getchar();
+            printf("c%d %c\n", c, c);
+        } while (c != '\n' && c != 0);
         if (amount > 0.0)
         {
             return amount;
@@ -162,13 +168,19 @@ double withdrawal(char *balance)
     {
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
-        getchar();
+        char c = '0';
+        do
+        {
+            c = getchar();
+            printf("c%d %c\n", c, c);
+        } while (c != '\n' && c != 0);
         if (amount < 0.0)
         {
             printf("=> INVALID INPUT\n");
             continue;
         }
-        if (amount > 0.0 + atoi(balance))
+        // printf("input:%lf\nread:%s\natoi:%lf\n", amount, balance, atoi(balance)/100.0);
+        if (amount > atoi(balance) / 100.0)
         {
             printf("=> INSUFFICIENT BALANCE\n");
             continue;
@@ -188,7 +200,12 @@ int service()
         // read integer or skip other
         scanf("%c", &atm);
         // read skipped and newline
-        getchar();
+        char c = '0';
+        do
+        {
+            c = getchar();
+            printf("c%d %c\n", c, c);
+        } while (c != '\n' && c != 0);
         if (atm == '1' || atm == '2')
         {
             break;
@@ -202,10 +219,20 @@ int service()
     {
         printf("=> ACCOUNT\n");
         scanf("%16s", acc1);
-        getchar();
+        char c = '0';
+        do
+        {
+            c = getchar();
+            printf("c%d %c\n", c, c);
+        } while (c != '\n' && c != 0);
         printf("=> PASSWORD\n");
         scanf("%6s", pswd);
-        getchar();
+        c = '0';
+        do
+        {
+            c = getchar();
+            printf("c%d %c\n", c, c);
+        } while (c != '\n' && c != 0);
         int check = checkAcc(acc1, pswd, 1);
         if (check == 0)
         {
@@ -227,7 +254,12 @@ int service()
     {
         printf("=> PLEASE CHOOSE YOUR SERVICE\n=> PRESS D FOR DEPOSIT\n=> PRESS W FOR WITHDRWAL\n=> PRESS T FOR TRANSFER\n");
         scanf("%c", &opt);
-        getchar();
+        char c = '0';
+        do
+        {
+            c = getchar();
+            printf("c%d %c\n", c, c);
+        } while (c != '\n' && c != 0);
         if (opt == 'W' || opt == 'D' || opt == 'T')
         {
             break;
@@ -259,7 +291,12 @@ int service()
         {
             printf("=> ACCOUNT\n");
             scanf("%16s", acc2);
-            getchar();
+            char c = '0';
+            do
+            {
+                c = getchar();
+                printf("c%d %c\n", c, c);
+            } while (c != '\n' && c != 0);
             if (strcmp(acc1, acc2) == 0)
             {
                 printf("=> YOU CANNOT TRANSFER TO YOURSELF\n");
@@ -271,12 +308,12 @@ int service()
                 break;
             }
         }
-        
+
         char *balance = mbalance;
         double amount = withdrawal(balance);
         opt = 'W';
         writeAtm(acc1, &atm, &opt, &amount);
-        opt='D';
+        opt = 'D';
         writeAtm(acc2, &atm, &opt, &amount);
     }
 
@@ -306,7 +343,12 @@ int main()
         {
             printf("=> CONTINUE?\n=> Y FOR YES\n=> N FOR NO\n");
             scanf("%c", &conti);
-            getchar();
+            char c = '0';
+            do
+            {
+                c = getchar();
+                printf("c%d %c\n", c, c);
+            } while (c != '\n' && c != 0);
         } while (conti != 'Y' && conti != 'N');
     } while (conti != 'N');
 
