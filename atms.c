@@ -23,14 +23,17 @@
 FILE *t1 = NULL,
      *t2 = NULL,
      *mtr = NULL;
+
 char *f711 = "trans711.txt",
      *f713 = "trans713.txt",
      *fmtr = "master.txt";
+
 char mrecord[60] = {0},
      mname[22] = {0},
      macc[18] = {0},
      mpswd[8] = {0},
      mbalance[18] = {0};
+
 int stamp = 0;
 
 // clean stdin to avoid error
@@ -40,7 +43,7 @@ void cleanStdin()
     do
     {
         c = getchar();
-        // printf("int%d char%c\n", c, c);
+        // printf("the value char %c is %d\n", c, c);
     } while (c != '\n' && c != 0);
     return;
 }
@@ -54,6 +57,7 @@ int checkAcc(char *acc, char *pswd, int who)
         printf("=> ERROR IN OPENING MASTER FILE\n");
         exit(1);
     }
+
     while (1)
     {
         if (feof(mtr))
@@ -73,13 +77,16 @@ int checkAcc(char *acc, char *pswd, int who)
         // fgets only get n-1
         fgets(mrecord, 61, mtr);
         // puts(mrecord);
+
         // sscanf cannot handle blank space
         // sscanf(mrecord, "%20s %16s %6s %16s", mname, macc, mpswd, mbalance);
+
         strncpy(mname, mrecord, 20);
         strncpy(macc, mrecord + 20, 16);
         strncpy(mpswd, mrecord + 36, 6);
         strncpy(mbalance, mrecord + 42, 16);
         // printf("%s\n%s\n%s\n%s\n", mname, macc, mpswd, mbalance);
+
         if (who == 1)
         {
             if (strncmp(macc, acc, 16) == 0 && 0 == strncmp(mpswd, pswd, 6))
@@ -118,6 +125,7 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
         time[i] = time[i] > j ? time[i] : j;
         tim /= 10;
     }
+
     // (b) get amount string
     char amou[8] = {'0'};
     int amo = lround(100 * (*amount));
@@ -130,7 +138,8 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
         amou[i] = amou[i] > k ? amou[i] : k;
         amo /= 10;
     }
-    // (c) write to ATM
+
+    // (c) prepare record
     char record[29] = {0};
     strncat(record, acc, 16);
     strncat(record, opt, 1);
@@ -139,6 +148,8 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
     printf("=> GENERATE RECORD: ");
     puts(record);
     // printf("%c\n", *atm);
+
+    // (d) write to ATM
     if (*atm == '1')
     {
         fputs(record, t1);
@@ -149,6 +160,7 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
         fputs(record, t2);
         fprintf(t2, "\n");
     }
+
     stamp++;
     return;
 }
@@ -270,6 +282,7 @@ int service()
     // (4c) transfer
     if (opt == 'T')
     {
+        char *balance = mbalance;
         while (1)
         {
             printf("=> ACCOUNT\n");
@@ -286,7 +299,6 @@ int service()
                 break;
             }
         }
-        char *balance = mbalance;
         double amount = withdrawal(balance);
         opt = 'W';
         writeAtm(acc1, &atm, &opt, &amount);
