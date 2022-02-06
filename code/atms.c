@@ -54,7 +54,7 @@ int checkAcc(char *acc, char *pswd, int who)
     mtr = fopen(fmtr, "r");
     if (mtr == NULL)
     {
-        printf("=> ERROR IN OPENING MASTER FILE\n");
+        printf("=> ERROR IN OPENING MASTER FILE\n=> BYEBYE\n");
         exit(1);
     }
 
@@ -128,7 +128,8 @@ void writeAtm(char *acc, char *atm, char *opt, double *amount)
 
     // (b) get amount string
     char amou[8] = {'0'};
-    int amo = lround(100 * (*amount));
+    long long int amo = (long long int)round(100 * (*amount));
+    // printf("%lf %lld\n", *amount, amo);
     int k = 0;
     for (int i = 6; i >= 0; i--)
     {
@@ -173,7 +174,8 @@ double deposit()
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
         cleanStdin();
-        if (amount > 0.0)
+        // printf("=> AMOUNT: %lf\n", amount);
+        if (round(100 * amount) > 0.000)
         {
             return amount;
         }
@@ -189,13 +191,15 @@ double withdrawal(char *balance)
         printf("=> AMOUNT\n");
         scanf("%8lf", &amount);
         cleanStdin();
-        if (amount < 0.0)
+        // printf("=> AMOUNT: %lf\n", amount);
+        if (round(100 * amount) < 0.000)
         {
             printf("=> INVALID INPUT\n");
             continue;
         }
         // printf("input:%lf\nread:%s\natoi:%lf\n", amount, balance, atoi(balance)/100.0);
-        if (amount > atoi(balance) / 100.0)
+        // printf("=> BALANCE: %lf\n", atoll(balance) / 100.000);
+        if (round(100.000 * amount) > atoll(balance))
         {
             printf("=> INSUFFICIENT BALANCE\n");
             continue;
@@ -282,7 +286,8 @@ int service()
     // (4c) transfer
     if (opt == 'T')
     {
-        char *balance = mbalance;
+        char balance[18] = {0};
+        strcpy(balance, mbalance);
         while (1)
         {
             printf("=> ACCOUNT\n");
@@ -299,6 +304,7 @@ int service()
                 break;
             }
         }
+        // printf("%s\n",balance);
         double amount = withdrawal(balance);
         opt = 'W';
         writeAtm(acc1, &atm, &opt, &amount);

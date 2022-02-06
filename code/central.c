@@ -25,7 +25,7 @@ int try_open(char *fil)
     FILE *f = fopen(fil, "r");
     if (f == NULL)
     {
-        printf("=> ERROR IN OPENING %s FILE\n", fil);
+        printf("=> ERROR IN OPENING FILE %s \n", fil);
         return 1;
     }
     fclose(f);
@@ -146,8 +146,8 @@ void update_transaction(char *fs, char *fmtr, char *fmup, char *fneg)
         strncat(urecord, mpswd, 6);
         strncat(urecord, mbalance, 16);
 
-        printf("=> GENERATE RECORD: ");
-        puts(urecord);
+        // printf("=> GENERATE RECORD: ");
+        // puts(urecord);
 
         fputs(urecord, fi2);
         fprintf(fi2, "\n");
@@ -156,7 +156,7 @@ void update_transaction(char *fs, char *fmtr, char *fmup, char *fneg)
         if (sign)
         {
             fprintf(fi3, "Name: %20s Account Number: %16s Balance: %16s\n", mname, macc, mbalance);
-            printf("=> GENERATE RECORD: Name: %20s Account Number: %16s Balance: %16s\n", mname, macc, mbalance);
+            // printf("=> GENERATE RECORD: Name: %20s Account Number: %16s Balance: %16s\n", mname, macc, mbalance);
         }
     }
 
@@ -197,6 +197,6 @@ int main()
     // (4) update
     update_transaction(fs, fmtr, fmup, fneg);
 
-    printf("=> ALL DONE SUCCESSFULLY\n");
+    printf("=> ALL DONE SUCCESSFULLY\n=> BYEBYE\n");
     return 0;
 }

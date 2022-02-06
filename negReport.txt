@@ -1,4 +1,0 @@
-Name: Meiqi Zeng           Account Number: 2345678173401726 Balance: -000000000022222
-Name: Piao Deng            Account Number: 6787234687123546 Balance: -000000000005688
-Name: DALE                 Account Number: 2222222222222222 Balance: -000000000000002
-Name: MAN                  Account Number: 5555555555555555 Balance: -999996160038399

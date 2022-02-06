@@ -148,7 +148,7 @@
            DISPLAY "=> AMOUNT".
            ACCEPT AMOUNT.
            IF AMOUNT IS POSITIVE THEN 
-               DISPLAY "=> DEPOSIT ", AMOUNT, " TO ", ACC2
+               DISPLAY "=> DEPOSIT ", AMOUNT, " TO ", ACC1
                IF ATM = 1 THEN 
                    MOVE ACC1 TO T1ACC
                    MOVE 'D' TO T1OPERATION

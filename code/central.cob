@@ -266,7 +266,7 @@
 
       *SAY BYEBYE      
        FAREWELL.
-           DISPLAY "=> ALL DONE SUCCESSFULLY".
+           DISPLAY "=> BYEBYE".
            STOP RUN.
 
        END PROGRAM central.
